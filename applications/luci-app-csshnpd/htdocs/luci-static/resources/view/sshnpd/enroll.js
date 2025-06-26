@@ -40,17 +40,17 @@ return view.extend({
 
 	render: function(res) {
 
-		var has_atkey = res.path,
-			atsign = uci.get_first('sshnpd','','atsign'),
-			device = uci.get_first('sshnpd','','device'),
-			otp = uci.get_first('sshnpd','','otp'),
-			enrollready = atsign && device && otp && !has_atkey,
+		let has_atkey = res.path;
+		let atsign = uci.get_first('sshnpd','','atsign');
+		let device = uci.get_first('sshnpd','','device');
+		let otp = uci.get_first('sshnpd','','otp');
+		let enrollready = atsign && device && otp && !has_atkey;
 
-			instructions = E('div', { 'class': 'cbi-map-descr'}, _('Press the Enroll button then run this command on a system where '+atsign+' is activated:')),
+		let instructions = E('div', { 'class': 'cbi-map-descr'}, _('Press the Enroll button then run this command on a system where '+atsign+' is activated:'));
 
-			enrollcmd = E('code','at_activate approve -a '+atsign+' --arx noports --drx '+device),
+		let enrollcmd = E('code','at_activate approve -a '+atsign+' --arx noports --drx '+device);
 
-			table = E('table', { 'class': 'table' }, [
+		let table = E('table', { 'class': 'table' }, [
 				E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left' }, [
 						E('span', { 'class': 'diag-action' }, [
@@ -61,9 +61,9 @@ return view.extend({
 						])
 					]),
 				])
-			]),
+			]);
 
-			cmdwindow = E('div', {'class': 'cbi-section'}, [
+		let cmdwindow = E('div', {'class': 'cbi-section'}, [
 			E('div', { 'id' : 'command-output'},
 				E('textarea', {
 					'id': 'widget.command-output',
@@ -73,9 +73,9 @@ return view.extend({
 					'rows': '20'
 				})
 			)
-			]),
+			]);
 
-			view = E('div', { 'class': 'cbi-map'}, [
+		let view = E('div', { 'class': 'cbi-map'}, [
 			E('h2', {}, [ _('NoPorts atSign Enrollment') ]),
 			atsign ? E([]) : E('div', { 'class': 'cbi-map-descr'}, _('atSign must be configured')),
 			device ? E([]) : E('div', { 'class': 'cbi-map-descr'}, _('Device must be configured')),

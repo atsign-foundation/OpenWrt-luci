@@ -2,26 +2,29 @@
 'require view';
 'require form';
 
-// Project code format is tabs, not spaces
 return view.extend({
+	// Validator for strings starting with '@'
+	validateAtSignPrefix: function(section_id, value) {
+		let trimmedValue = (value || '').trim();
+
+		if (!/^@/.test(trimmedValue)) {
+			throw new Error(_('Must start with the "@" character.'));
+		}
+
+		if (trimmedValue.length < 2) {
+			throw new Error(_('Must be at least 2 characters long (e.g., "@a").'));
+		}
+
+		if (!/^@[a-zA-Z0-9_-]+$/.test(trimmedValue)) {
+			throw new Error(_('Can only contain letters, numbers, hyphens, and underscores after "@".'));
+		}
+
+		return true;
+	};
+
 	render: function() {
-		var m, s, o;
+		let m, s, o;
 
-		/*
-		The first argument to form.Map() maps to the configuration file available
-		via uci at /etc/config/. In this case, 'sshnpd' maps to /etc/config/sshnpd.
-
-		If the file is completely empty, the form sections will indicate that the
-		section contains no values yet. As such, your package installation (LuCI app
-		or software that the app configures) should lay down a basic configuration
-		file with all the needed sections.
-
-		The relevant ACL path for reading a configuration with UCI this way is
-		read > uci > ["example"]
-
-		The relevant ACL path for writing back the configuration is
-		write > uci > ["example"]
-		*/
 		m = new form.Map('sshnpd', _('NoPorts'),
 			_('Daemon Configuration'));
 
@@ -30,6 +33,7 @@ return view.extend({
 
 		s.option(form.Value, 'atsign', _('Device atSign'),
 			_('The device atSign e.g. @device'));
+		o.validate = this.validateAtSignPrefix;
 
 		s.option(form.Value, 'manager', _('Manager atSign'),
 			_('The manager atSign e.g. @manager'));
